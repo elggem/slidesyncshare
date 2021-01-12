@@ -1,0 +1,23 @@
+name: "Test Slidedeck Nr1"
+author: "Ralf Mayet"
+
+slides:
+- type: "markdown"
+  content: |-
+   # Here is another test
+   and a longer string beneath
+
+- type: "poll"
+  content:
+    - Answer A
+    - Answer B
+    - Answer C
+
+- type: "quiz"
+  content:
+    - question: 1+1?
+      answer: 2
+    - question: 2+2?
+      answer: 4
+    - question: 3+3?
+      answer: 6

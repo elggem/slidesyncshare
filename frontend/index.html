@@ -1,0 +1,57 @@
+<html>
+<head>
+  <title>SlideSyncShare</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com"> 
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="./node_modules/js-yaml/dist/js-yaml.min.js"></script>
+</head>
+
+
+<body>
+
+<div id="navbar">
+	<span id="logo">SlideSyncShare</span>
+	<div id="buttonbar">
+		<span class="button"><a href="#">Previous Slide</a></span>
+		<span class="button"><a href="#">Next Slide</a></span>
+		<span class="button"><a href="#">Exit</a></span>
+
+	</div>
+</div>
+
+
+
+<div id="container">
+	<div id="slides">
+		<div id="slide">
+			<h1>Slide content</h1>
+			<span>Testing!</span>
+		</div>
+	</div>
+
+	<div id="videoconference">
+		
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<script>
+$.get( './demo.yml', function( data ) {
+            var obj = jsyaml.load( data );
+            console.log( obj );
+        });
+</script>
+
+</body>
+</html>
