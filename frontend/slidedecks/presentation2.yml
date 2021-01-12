@@ -10,14 +10,15 @@ slides:
     Presenter: Ralf Mayet
 
     January 12, 2021   
+
    
 - type: "markdown"
   content: |-
     # Motivation
-      - In a student teacher videoconference, there are many ways to synchronize slides between participants, in a shared experience and unified learning environment.
-      - SlideSyncShare: A synchronized and interactive presentation for multiple participants, embedded side-by-side a real-time videoconference.
-      - Can be embedded into a learning management system using LTI.
-      - No screen sharing with video encoding like Zoom! Instead, local rendering of slides, and synchronisation between participants.
+      - In a videoconference, there are many ways to synchronize slides between the presenter and participants.
+      - We propose SlideSyncShare: A synchronized and interactive presentation tool that is locally rendered and embedded next to a real-time videoconference.
+      - Integration with learning management systems using the learning tools interoperability (LTI) standard.
+
 
 - type: "markdown"
   content: |-
@@ -25,3 +26,53 @@ slides:
       - *Shared presentation:* The lecturer controls which slide is currently being shown to the students.
       - *Interactive polls:* Students participate in a poll and results are synchronized with the group.
       - *Interactive Quizzes:* Students participate in quizzes and results will only be shared with the lecturer and after completion.
+
+
+- type: "markdown"
+  content: |-
+    # Development Environment
+      - Hosting on Github Repository: [https://github.com/elggem/slidesyncshare](https://github.com/elggem/slidesyncshare)
+      - Development on AWS with Docker Moodle Instance at [https://18.198.90.241/](https://18.198.90.241/)
+
+
+- type: "markdown"
+  content: |-
+    # Roadmap and Progress
+      - _Frontend_:
+        - [x] Initial Design
+        - [x] Rendering Slides from YAML file:
+          - [x] Slides with Markdown Formatting
+          - [x] Interactive Polls
+          - [x] Interactive Quizzes
+        - [ ] Embedding the videoconferencing view
+        - [ ] Special view for lecturer
+      - _Integration_:
+        - [ ] LTI Integration (via ltijs)
+        - [ ] Videoconferencing Integration (via Jitsi or PeerJS)
+        - [ ] User Token Management
+        - [ ] Slide Synchronisation via Websockets
+        - [ ] Synchronization of polls and quizzes.
+
+
+- type: "markdown"
+  content: |-
+    # Frontend
+      - We had considered using PDF.js for rendering the slidedecks but have switched to rendering them from a YAML file. 
+      - This allows for better integration of interactive polls and quizzes.
+      - Markdown rendering is very flexible and allows for embedded HTML as well.
+
+      <iframe width="300" height="200" src="https://www.youtube-nocookie.com/embed/pCpLWbHVNhk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+- type: "markdown"
+  content: |-
+    # LTI Integration
+
+
+
+
+- type: "markdown"
+  content: |-
+    # Thank you!
+
+
