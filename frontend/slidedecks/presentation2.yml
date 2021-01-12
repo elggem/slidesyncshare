@@ -4,14 +4,14 @@ author: "Ralf Mayet"
 slides:
 - type: "markdown"
   content: |-
-    # Advanced Web Technologies 
+    # Advanced Web Technologies
     # Project Presentation 2
     ## Immersive Video Conferencing Group 4
     Presenter: Ralf Mayet
 
-    January 12, 2021   
+    January 12, 2021
 
-   
+
 - type: "markdown"
   content: |-
     # Motivation
@@ -37,6 +37,42 @@ slides:
 
 - type: "markdown"
   content: |-
+    # Frontend
+      - We considered using PDF.js for rendering the slidedecks but have switched to rendering them from a YAML file.
+      - This allows for better integration of interactive polls and quizzes.
+      - Markdown rendering is very flexible and allows for embedded HTML as well.
+
+      <iframe width="300" height="200" src="https://www.youtube-nocookie.com/embed/pCpLWbHVNhk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+- type: "poll"
+  title: "A demonstration poll"
+  answers:
+    - Answer A
+    - Answer B
+    - Answer C
+
+- type: "quiz"
+  title: "A demonstration quiz"
+  questions:
+    - prompt: 1+1?
+      answer: 2
+    - prompt: 2+2?
+      answer: 4
+    - prompt: 3+3?
+      answer: 6
+
+
+- type: "markdown"
+  content: |-
+    # LTI Integration
+      - PyLTI and Flask are used for the integration.
+      - We can add our tool into Moodle and we have basic user authentication.
+      - In the future we will use this user authentication to display independent views for lecturer and students.
+
+      
+- type: "markdown"
+  content: |-
     # Roadmap and Progress
       - _Frontend_:
         - [x] Initial Design
@@ -47,32 +83,13 @@ slides:
         - [ ] Embedding the videoconferencing view
         - [ ] Special view for lecturer
       - _Integration_:
-        - [ ] LTI Integration (via ltijs)
-        - [ ] Videoconferencing Integration (via Jitsi or PeerJS)
-        - [ ] User Token Management
+        - [x] Basic LTI Integration via PyLTS
+        - [x] Basic User Management (querying name and roles)
+        - [ ] Videoconferencing Integration (probably via PeerJS)
         - [ ] Slide Synchronisation via Websockets
         - [ ] Synchronization of polls and quizzes.
 
 
 - type: "markdown"
   content: |-
-    # Frontend
-      - We had considered using PDF.js for rendering the slidedecks but have switched to rendering them from a YAML file. 
-      - This allows for better integration of interactive polls and quizzes.
-      - Markdown rendering is very flexible and allows for embedded HTML as well.
-
-      <iframe width="300" height="200" src="https://www.youtube-nocookie.com/embed/pCpLWbHVNhk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
-- type: "markdown"
-  content: |-
-    # LTI Integration
-
-
-
-
-- type: "markdown"
-  content: |-
     # Thank you!
-
-
