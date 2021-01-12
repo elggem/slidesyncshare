@@ -24,6 +24,12 @@ body {
 	float:left;
 }
 
+#name {
+	display:block;
+	font-size:0.5em;
+	font-weight:400;
+}
+
 #buttonbar {
 	font-size:1em;
 	margin-right:1em;

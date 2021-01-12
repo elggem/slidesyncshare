@@ -55,47 +55,7 @@ def index(lti=lti):
     :param lti: the `lti` object from `pylti`
     :return: index page for lti provider
     """
-    return render_template('index.html', lti=lti)
-
-
-@app.route('/index_staff', methods=['GET', 'POST'])
-@lti(request='session', error=error, role='staff', app=app)
-def index_staff(lti=lti):
-    """ render the contents of the staff.html template
-
-    :param lti: the `lti` object from `pylti`
-    :return: the staff.html template rendered
-    """
-    return render_template('staff.html', lti=lti)
-
-
-@app.route('/add', methods=['GET'])
-@lti(request='session', error=error, app=app)
-def add_form(lti=lti):
-    """ initial access page for lti consumer
-
-    :param lti: the `lti` object from `pylti`
-    :return: index page for lti provider
-    """
-    form = AddForm()
-    form.p1.data = randint(1, 9)
-    form.p2.data = randint(1, 9)
-    return render_template('add.html', form=form)
-
-
-@app.route('/grade', methods=['POST'])
-@lti(request='session', error=error, app=app)
-def grade(lti=lti):
-    """ post grade
-
-    :param lti: the `lti` object from `pylti`
-    :return: grade rendered by grade.html template
-    """
-    form = AddForm()
-    correct = ((form.p1.data + form.p2.data) == form.result.data)
-    form.correct.data = correct
-    lti.post_grade(1 if correct else 0)
-    return render_template('grade.html', form=form)
+    return render_template('frontend/index.html', lti=lti)
 
 
 def set_debugging():
