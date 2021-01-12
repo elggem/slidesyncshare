@@ -6,9 +6,9 @@ slides:
   content: |-
    # Here is a test
    And a subtitle beneath.
-      1. I am curious about bullet points.
-      1. Or numbered lists
-      1. such as this.
+      - [x] I am curious about bullet points.
+      - [ ] Or numbered lists
+      - [ ] such as this.
 
 - type: "markdown"
   content: |-
@@ -17,16 +17,18 @@ slides:
       <br><img src="https://placekitten.com/g/200/200"/>
 
 - type: "poll"
-  content:
+  title: "A demonstration poll"
+  answers:
     - Answer A
     - Answer B
     - Answer C
 
 - type: "quiz"
-  content:
-    - question: 1+1?
+  title: "A demonstration quiz"
+  questions:
+    - prompt: 1+1?
       answer: 2
-    - question: 2+2?
+    - prompt: 2+2?
       answer: 4
-    - question: 3+3?
+    - prompt: 3+3?
       answer: 6

@@ -63,6 +63,17 @@ body {
 	background-color: rgba(0,0,0,0.8);
 }
 
+#videoconference {
+	width:35%;
+	height:80%;
+	background-color:black;
+}
+
+#videoElement {
+	width:100%;
+	height:100%;
+}
+
 #slides {
 	display: flex;
 	justify-content: space-evenly;
@@ -81,21 +92,20 @@ body {
 	font-size: 2.5vh;
 }
 
-#slide h1 {
+
+.pollanswer {
+	background-color: rgba(50,50,100,0.2);
+	padding:20px;
+	margin-bottom:20px;
+	text-align: left;
 
 }
 
-#slide span {
 
-}
+.pollbutton {
+	background-color: rgba(50,50,100,0.1);
+	padding:20px;
+	text-align: center;
+	cursor: pointer;
 
-#videoconference {
-	width:35%;
-	height:80%;
-	background-color:black;
-}
-
-#videoElement {
-	width:100%;
-	height:100%;
 }

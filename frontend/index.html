@@ -49,13 +49,12 @@
 
 
 	<script>
-		var slidesFilename = "./slidedecks/presentation2.yml";
+		var slidesFilename = "./slidedecks/demo.yml";
 		var slidesFile = null;
 		var currentSlide = 0;
 
 		$.get( slidesFilename, function( data ) {
 	        slidesFile = jsyaml.load( data );
-
 	        renderCurrentSlide();
 		});
 
@@ -65,18 +64,30 @@
 				if (currentSlide >= slidesFile.slides.length)
 					currentSlide = slidesFile.slides.length-1;
 
+  				var s = slidesFile.slides[currentSlide];
+
 				switch(slidesFile.slides[currentSlide].type) {
 					case "markdown":
-						document.getElementById('slide').innerHTML =
-	      					marked(slidesFile.slides[currentSlide].content);
+						document.getElementById('slide').innerHTML = marked(s.content);
 	      				break;
 
 	      			case "poll":
-	      				document.getElementById('slide').innerHTML = "TODO implement poll rendering";
+	      				var h = marked("# " + s.title);
+						for (var i = 0; i < s.answers.length; i++) {
+	      					h += "<div class=\'pollanswer\'><input type=\'checkbox\'> " + s.answers[i] + "</div>";
+						}
+	      				h+= "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
+	      				document.getElementById('slide').innerHTML = h;
 	      				break;
 
 	      			case "quiz":
-	      				document.getElementById('slide').innerHTML = "TODO implement quiz rendering";
+	      				var h = marked("# " + s.title);
+						for (var i = 0; i < s.questions.length; i++) {
+	      					h += "<div class=\'pollanswer\'>" + s.questions[i].prompt + "<input type=\'textfield\' style=\'float: right\'> </div>";
+						}
+
+	      				h+= "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
+	      				document.getElementById('slide').innerHTML = h;
 	      				break;
 
 	      			default:
