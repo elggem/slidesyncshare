@@ -8,21 +8,8 @@ from random import randint
 from pylti.flask import lti
 
 VERSION = '0.0.1'
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder="frontend", template_folder="frontend")
 app.config.from_object('config')
-
-
-class AddForm(Form):
-    """ Add data from Form
-
-    :param Form:
-    """
-
-    p1 = IntegerField('p1')
-    p2 = IntegerField('p2')
-    result = IntegerField('result')
-    correct = BooleanField('correct')
-
 
 def error(exception=None):
     """ render error page
