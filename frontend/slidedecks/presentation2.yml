@@ -1,0 +1,27 @@
+name: "AWT Project Presentation 2"
+author: "Ralf Mayet"
+
+slides:
+- type: "markdown"
+  content: |-
+    # Advanced Web Technologies 
+    # Project Presentation 2
+    ## Immersive Video Conferencing Group 4
+    Presenter: Ralf Mayet
+
+    January 12, 2021   
+   
+- type: "markdown"
+  content: |-
+    # Motivation
+      - In a student teacher videoconference, there are many ways to synchronize slides between participants, in a shared experience and unified learning environment.
+      - SlideSyncShare: A synchronized and interactive presentation for multiple participants, embedded side-by-side a real-time videoconference.
+      - Can be embedded into a learning management system using LTI.
+      - No screen sharing with video encoding like Zoom! Instead, local rendering of slides, and synchronisation between participants.
+
+- type: "markdown"
+  content: |-
+    # Our use cases
+      - *Shared presentation:* The lecturer controls which slide is currently being shown to the students.
+      - *Interactive polls:* Students participate in a poll and results are synchronized with the group.
+      - *Interactive Quizzes:* Students participate in quizzes and results will only be shared with the lecturer and after completion.
