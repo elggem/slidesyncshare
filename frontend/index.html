@@ -4,54 +4,104 @@
   <link rel="preconnect" href="https://fonts.gstatic.com"> 
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css"/>
-
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="./node_modules/js-yaml/dist/js-yaml.min.js"></script>
+  <script src="./node_modules/marked/marked.min.js"></script>
 </head>
 
-
 <body>
-
-<div id="navbar">
-	<span id="logo">SlideSyncShare</span>
-	<div id="buttonbar">
-		<span class="button"><a href="#">Previous Slide</a></span>
-		<span class="button"><a href="#">Next Slide</a></span>
-		<span class="button"><a href="#">Exit</a></span>
-
-	</div>
-</div>
-
-
-
-<div id="container">
-	<div id="slides">
-		<div id="slide">
-			<h1>Slide content</h1>
-			<span>Testing!</span>
+	<div id="navbar">
+		<span id="logo">SlideSyncShare</span>
+		<div id="buttonbar">
+			<span class="button" onclick="previousSlide()">Previous Slide</span>
+			<span class="button" onclick="nextSlide()">Next Slide</span>
+			<span class="button" onclick="exit()">Exit</span>
 		</div>
 	</div>
 
-	<div id="videoconference">
-		
+	<div id="container">
+		<div id="slides">
+			<div id="slide">
+				<!-- This gets it's content from javascript. -->
+			</div>
+		</div>
+
+		<div id="videoconference">
+			<video autoplay="true" id="videoElement"></video>
+		</div>
 	</div>
-</div>
 
 
+	<script>
+		// Initialize mock webcam view
+		var video = document.querySelector("#videoElement");
+
+		if (navigator.mediaDevices.getUserMedia) {
+		  navigator.mediaDevices.getUserMedia({ video: true })
+		    .then(function (stream) {
+		      video.srcObject = stream;
+		    })
+		    .catch(function (error) {
+		      console.log("Something went wrong!");
+		    });
+		}
+	</script>
 
 
+	<script>
+		var slidesFilename = "./slidedecks/demo.yml";
+		var slidesFile = null;
+		var currentSlide = 0;
+
+		$.get( slidesFilename, function( data ) {
+	        slidesFile = jsyaml.load( data );
+
+	        renderCurrentSlide();
+		});
 
 
+		function renderCurrentSlide() {
+			if (slidesFile != null) {
+				if (currentSlide >= slidesFile.slides.length)
+					currentSlide = slidesFile.slides.length-1;
 
+				switch(slidesFile.slides[currentSlide].type) {
+					case "markdown":
+						document.getElementById('slide').innerHTML =
+	      					marked(slidesFile.slides[currentSlide].content);
+	      				break;
 
+	      			case "poll":
+	      				document.getElementById('slide').innerHTML = "TODO implement poll rendering";
+	      				break;
 
+	      			case "quiz":
+	      				document.getElementById('slide').innerHTML = "TODO implement quiz rendering";
+	      				break;
 
-<script>
-$.get( './demo.yml', function( data ) {
-            var obj = jsyaml.load( data );
-            console.log( obj );
-        });
-</script>
+	      			default:
+	      				console.log("unknown slide type");
+	      				break;
+				}
+				
+			}
+		}
+
+	    function previousSlide() {
+	    	currentSlide -= 1
+	    	if (currentSlide < 0) currentSlide = 0;
+	    	renderCurrentSlide();
+	    }
+
+	    function nextSlide() {
+	    	currentSlide += 1
+	    	renderCurrentSlide();
+	    }
+
+	    function exit() {
+	    	document.location = "https://google.de";
+	    }
+	</script>
 
 </body>
 </html>

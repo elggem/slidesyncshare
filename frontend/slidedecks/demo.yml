@@ -4,8 +4,17 @@ author: "Ralf Mayet"
 slides:
 - type: "markdown"
   content: |-
-   # Here is another test
-   and a longer string beneath
+   # Here is a test
+   And a subtitle beneath.
+      1. I am curious about bullet points.
+      1. Or numbered lists
+      1. such as this.
+
+- type: "markdown"
+  content: |-
+   # Slide number two
+   We can even use HTML
+      <br><img src="https://placekitten.com/g/200/200"/>
 
 - type: "poll"
   content:
