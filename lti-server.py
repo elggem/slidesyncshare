@@ -55,7 +55,7 @@ def index(lti=lti):
     :param lti: the `lti` object from `pylti`
     :return: index page for lti provider
     """
-    return render_template('frontend/index.html', lti=lti)
+    return render_template('index.html', lti=lti)
 
 
 def set_debugging():
