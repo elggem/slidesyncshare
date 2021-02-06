@@ -1,1 +1,24 @@
-I'm up
+<html lang="en">
+
+<head>
+    <title>Jitsi Test</title>
+    <script src='https://meet.jit.si/external_api.js'></script>
+</head>
+
+<body>
+<div id="jitsi">
+
+</div>
+<script>
+    const domain = 'meet.jit.si';
+    const options = {
+        roomName: 'JitsiMeetAPIExample',
+        width: 700,
+        height: 700,
+        parentNode: document.querySelector('#jitsi')
+    };
+    const api = new JitsiMeetExternalAPI(domain, options);
+</script>
+</body>
+
+</html>
