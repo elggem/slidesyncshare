@@ -31,25 +31,27 @@
     </div>
 
     <div id="videoconference">
-        {#			<video autoplay="true" id="videoElement"></video>#}
+        {#
+        <video autoplay="true" id="videoElement"></video>
+        #}
     </div>
 </div>
 
 
-{#	<script>#}
-{#		// Initialize mock webcam view#}
-{#		var video = document.querySelector("#videoElement");#}
-{##}
-{#		if (navigator.mediaDevices.getUserMedia) {#}
-{#		  navigator.mediaDevices.getUserMedia({ video: true })#}
-{#		    .then(function (stream) {#}
-{#		      video.srcObject = stream;#}
-{#		    })#}
-{#		    .catch(function (error) {#}
-{#		      console.log("Something went wrong!");#}
-{#		    });#}
-{#		}#}
-{#	</script>#}
+<script>
+    // Initialize mock webcam view#}
+    var video = document.querySelector("#videoElement");
+
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({video: true})
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (error) {
+                console.log("Something went wrong!");
+            });
+    }
+</script>
 <script>
     const domain = 'meet.jit.si';
     const options = {
@@ -60,6 +62,7 @@
     };
     const api = new JitsiMeetExternalAPI(domain, options);
 </script>
+
 
 <script>
     var slidesFilename = "./slidedecks/presentation2.yml";
