@@ -31,9 +31,7 @@
     </div>
 
     <div id="videoconference">
-        {#
         <video autoplay="true" id="videoElement"></video>
-        #}
     </div>
 </div>
 
@@ -52,16 +50,16 @@
             });
     }
 </script>
-<script>
-    const domain = 'meet.jit.si';
-    const options = {
-        roomName: 'JitsiMeetAPIExample',
-        width: 700,
-        height: 700,
-        parentNode: document.querySelector('#videoconference')
-    };
-    const api = new JitsiMeetExternalAPI(domain, options);
-</script>
+<!--<script>-->
+<!--    const domain = 'meet.jit.si';-->
+<!--    const options = {-->
+<!--        roomName: 'JitsiMeetAPIExample',-->
+<!--        width: 700,-->
+<!--        height: 700,-->
+<!--        parentNode: document.querySelector('#videoconference')-->
+<!--    };-->
+<!--    const api = new JitsiMeetExternalAPI(domain, options);-->
+<!--</script>-->
 
 
 <script>
