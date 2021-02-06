@@ -1,119 +1,131 @@
 <html>
 <head>
-  <title>SlideSyncShare</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css"/>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="./node_modules/js-yaml/dist/js-yaml.min.js"></script>
-  <script src="./node_modules/marked/marked.min.js"></script>
+    <title>SlideSyncShare</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="style.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="./node_modules/js-yaml/dist/js-yaml.min.js"></script>
+    <script src="./node_modules/marked/marked.min.js"></script>
+    <script src='https://meet.jit.si/external_api.js'></script>
+
 </head>
 
 <body>
-	<div id="navbar">
+<div id="navbar">
 		<span id="logo">SlideSyncShare<br><span id="name">Hello, {{ lti.nickname }}!</span>
 </span>
-		<div id="buttonbar">
-			<span class="button" onclick="previousSlide()">Previous Slide</span>
-			<span class="button" onclick="nextSlide()">Next Slide</span>
-			<span class="button" onclick="exit()">Exit</span>
-		</div>
-	</div>
+    <div id="buttonbar">
+        <span class="button" onclick="previousSlide()">Previous Slide</span>
+        <span class="button" onclick="nextSlide()">Next Slide</span>
+        <span class="button" onclick="exit()">Exit</span>
+    </div>
+</div>
 
-	<div id="container">
-		<div id="slides">
-			<div id="slide">
-				<!-- This gets it's content from javascript. -->
-			</div>
-		</div>
+<div id="container">
+    <div id="slides">
+        <div id="slide">
+            <!-- This gets it's content from javascript. -->
+        </div>
+    </div>
 
-		<div id="videoconference">
-			<video autoplay="true" id="videoElement"></video>
-		</div>
-	</div>
-
-
-	<script>
-		// Initialize mock webcam view
-		var video = document.querySelector("#videoElement");
-
-		if (navigator.mediaDevices.getUserMedia) {
-		  navigator.mediaDevices.getUserMedia({ video: true })
-		    .then(function (stream) {
-		      video.srcObject = stream;
-		    })
-		    .catch(function (error) {
-		      console.log("Something went wrong!");
-		    });
-		}
-	</script>
+    <div id="videoconference">
+        {#			<video autoplay="true" id="videoElement"></video>#}
+    </div>
+</div>
 
 
-	<script>
-		var slidesFilename = "./slidedecks/presentation2.yml";
-		var slidesFile = null;
-		var currentSlide = 0;
+{#	<script>#}
+{#		// Initialize mock webcam view#}
+{#		var video = document.querySelector("#videoElement");#}
+{##}
+{#		if (navigator.mediaDevices.getUserMedia) {#}
+{#		  navigator.mediaDevices.getUserMedia({ video: true })#}
+{#		    .then(function (stream) {#}
+{#		      video.srcObject = stream;#}
+{#		    })#}
+{#		    .catch(function (error) {#}
+{#		      console.log("Something went wrong!");#}
+{#		    });#}
+{#		}#}
+{#	</script>#}
+<script>
+    const domain = 'meet.jit.si';
+    const options = {
+        roomName: 'JitsiMeetAPIExample',
+        width: 700,
+        height: 700,
+        parentNode: document.querySelector('#videoconference')
+    };
+    const api = new JitsiMeetExternalAPI(domain, options);
+</script>
 
-		$.get( slidesFilename, function( data ) {
-	        slidesFile = jsyaml.load( data );
-	        renderCurrentSlide();
-		});
+<script>
+    var slidesFilename = "./slidedecks/presentation2.yml";
+    var slidesFile = null;
+    var currentSlide = 0;
+
+    $.get(slidesFilename, function (data) {
+        slidesFile = jsyaml.load(data);
+        renderCurrentSlide();
+    });
 
 
-		function renderCurrentSlide() {
-			if (slidesFile != null) {
-				if (currentSlide >= slidesFile.slides.length)
-					currentSlide = slidesFile.slides.length-1;
+    function renderCurrentSlide() {
+        if (slidesFile != null) {
+            if (currentSlide >= slidesFile.slides.length)
+                currentSlide = slidesFile.slides.length - 1;
 
-  				var s = slidesFile.slides[currentSlide];
+            var s = slidesFile.slides[currentSlide];
 
-				switch(slidesFile.slides[currentSlide].type) {
-					case "markdown":
-						document.getElementById('slide').innerHTML = marked(s.content);
-	      				break;
+            switch (slidesFile.slides[currentSlide].type) {
+                case "markdown":
+                    document.getElementById('slide').innerHTML = marked(s.content);
+                    break;
 
-	      			case "poll":
-	      				var h = marked("# " + s.title);
-						for (var i = 0; i < s.answers.length; i++) {
-	      					h += "<div class=\'pollanswer\'><input type=\'checkbox\'> " + s.answers[i] + "</div>";
-						}
-	      				h+= "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
-	      				document.getElementById('slide').innerHTML = h;
-	      				break;
+                case "poll":
+                    var h = marked("# " + s.title);
+                    for (var i = 0; i < s.answers.length; i++) {
+                        h += "<div class=\'pollanswer\'><input type=\'checkbox\'> " + s.answers[i] + "</div>";
+                    }
+                    h += "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
+                    document.getElementById('slide').innerHTML = h;
+                    break;
 
-	      			case "quiz":
-	      				var h = marked("# " + s.title);
-						for (var i = 0; i < s.questions.length; i++) {
-	      					h += "<div class=\'pollanswer\'>" + s.questions[i].prompt + "<input type=\'textfield\' style=\'float: right\'> </div>";
-						}
+                case "quiz":
+                    var h = marked("# " + s.title);
+                    for (var i = 0; i < s.questions.length; i++) {
+                        h += "<div class=\'pollanswer\'>" + s.questions[i].prompt + "<input type=\'textfield\' style=\'float: right\'> </div>";
+                    }
 
-	      				h+= "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
-	      				document.getElementById('slide').innerHTML = h;
-	      				break;
+                    h += "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
+                    document.getElementById('slide').innerHTML = h;
+                    break;
 
-	      			default:
-	      				console.log("unknown slide type");
-	      				break;
-				}
+                default:
+                    console.log("unknown slide type");
+                    break;
+            }
 
-			}
-		}
+        }
+    }
 
-	    function previousSlide() {
-	    	currentSlide -= 1
-	    	if (currentSlide < 0) currentSlide = 0;
-	    	renderCurrentSlide();
-	    }
+    function previousSlide() {
+        currentSlide -= 1
+        if (currentSlide < 0) currentSlide = 0;
+        renderCurrentSlide();
+    }
 
-	    function nextSlide() {
-	    	currentSlide += 1
-	    	renderCurrentSlide();
-	    }
+    function nextSlide() {
+        currentSlide += 1
+        renderCurrentSlide();
+    }
 
-	    function exit() {
-	    	document.location = "https://google.de";
-	    }
-	</script>
+    function exit() {
+        document.location = "https://google.de";
+    }
+</script>
 
 </body>
 </html>
