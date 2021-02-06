@@ -6,7 +6,7 @@ from wtforms import IntegerField, BooleanField
 from random import randint
 
 from pylti.flask import lti
-
+dir = os.path.dirname(os.path.abspath(__file__))
 VERSION = '0.0.1'
 app = Flask(__name__, static_url_path='', static_folder="frontend", template_folder="frontend")
 app.config.from_object('config')
@@ -63,11 +63,13 @@ def set_debugging():
 
 set_debugging()
 
-if __name__ == '__main__':
-    """
-    For if you want to run the flask development server
-    directly
-    """
-    port = int(os.environ.get("FLASK_LTI_PORT", 5000))
-    host = os.environ.get("FLASK_LTI_HOST", "0.0.0.0")
-    app.run(debug=True, host=host, port=port, ssl_context='adhoc')
+#if __name__ == '__main__':
+"""
+For if you want to run the flask development server
+directly
+"""
+port = int(os.environ.get("FLASK_LTI_PORT", 5000))
+host = os.environ.get("FLASK_LTI_HOST", "0.0.0.0")
+context = (dir+'/server.crt', dir + '/server.key')
+print(dir+'/server.crt')
+app.run(debug=True, host=host, port=port, ssl_context=context)
