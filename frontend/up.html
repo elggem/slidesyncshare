@@ -15,6 +15,7 @@
         roomName: 'JitsiMeetAPIExample',
         width: 700,
         height: 700,
+        configOverwrite: { openBridgeChannel: 'datachannel' },
         parentNode: document.querySelector('#jitsi')
     };
     const api = new JitsiMeetExternalAPI(domain, options);
