@@ -45,8 +45,9 @@
             .then(function (stream) {
                 video.srcObject = stream;
             })
-            .catch(function (error) {
-                console.log("Something went wrong!");
+            .catch(function (err) {
+                console.log(err.name + ": " + err.message);
+
             });
     }
 </script>
