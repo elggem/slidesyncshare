@@ -58,8 +58,8 @@
     {#const domain = 'meet.jit.si'#}
     const options = {
         roomName: "test",
-        width: 350,
-        height: 350,
+        width: "100%",
+        {#height: 350,#}
         parentNode: document.querySelector('#videoconference'),
         configOverwrite: { openBridgeChannel: 'datachannel' },
         userInfo: {
@@ -72,7 +72,7 @@
     api.addEventListener('endpointTextMessageReceived', event=>console.log("Msg received: ", event))
 
     function testmessage(){
-        const input = document.getElementById('#test')
+        const input = document.getElementById('test')
         api.executeCommand('sendEndpointTextMessage', '', input.value);
     }
 </script>
