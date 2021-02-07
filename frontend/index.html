@@ -20,6 +20,7 @@
         <span class="button" onclick="previousSlide()">Previous Slide</span>
         <span class="button" onclick="nextSlide()">Next Slide</span>
         <span class="button" onclick="exit()">Exit</span>
+        <button type="button" onclick="testmessage()">Test</button>
     </div>
 </div>
 
@@ -52,15 +53,26 @@
 <!--    }-->
 <!--</script>-->
 <script>
-    const domain = 'meet.jit.si';
+    {#const domain = '18.198.90.241:8443';#}
+    const domain = 'meet.jit.si'
     const options = {
         roomName: "test",
         width: 700,
         height: 700,
         parentNode: document.querySelector('#videoconference'),
         configOverwrite: { openBridgeChannel: 'datachannel' },
+        userInfo: {
+            email: "{{ lti.nickname }}",
+            displayName: "{{ lti.nickname }}"
+        }
     };
     const api = new JitsiMeetExternalAPI(domain, options);
+
+    api.addEventListener('endpointTextMessageReceived', event=>console.log(event))
+
+    function testmessage(){
+        api.executeCommand('sendEndpointTextMessage', '', 'blob');
+    }
 </script>
 
 
