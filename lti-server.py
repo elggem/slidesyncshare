@@ -42,6 +42,7 @@ def index(lti=lti):
     :param lti: the `lti` object from `pylti`
     :return: index page for lti provider
     """
+    print(lti)
     return render_template('index.html', lti=lti)
 
 

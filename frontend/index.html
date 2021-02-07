@@ -31,7 +31,7 @@
     </div>
 
     <div id="videoconference">
-        <video autoplay="true" id="videoElement"></video>
+<!--        <video autoplay="true" id="videoElement"></video>-->
     </div>
 </div>
 
@@ -54,10 +54,11 @@
 <script>
     const domain = 'meet.jit.si';
     const options = {
-        roomName: 'JitsiMeetAPIExample',
+        roomName: "test",
         width: 700,
         height: 700,
-        parentNode: document.querySelector('#videoconference')
+        parentNode: document.querySelector('#videoconference'),
+        configOverwrite: { openBridgeChannel: 'datachannel' },
     };
     const api = new JitsiMeetExternalAPI(domain, options);
 </script>
