@@ -15,12 +15,13 @@
 <body>
 <div id="navbar">
 		<span id="logo">SlideSyncShare<br><span id="name">Hello, {{ lti.nickname }}!</span>
+<input type="text" id="test">
+        <button class="button" type="button" onclick="testmessage()">Test</button>
 </span>
     <div id="buttonbar">
         <span class="button" onclick="previousSlide()">Previous Slide</span>
         <span class="button" onclick="nextSlide()">Next Slide</span>
         <span class="button" onclick="exit()">Exit</span>
-        <button type="button" onclick="testmessage()">Test</button>
     </div>
 </div>
 
@@ -53,12 +54,12 @@
 <!--    }-->
 <!--</script>-->
 <script>
-    {#const domain = '18.198.90.241:8443';#}
-    const domain = 'meet.jit.si'
+    const domain = '18.198.90.241:8443';
+    {#const domain = 'meet.jit.si'#}
     const options = {
         roomName: "test",
-        width: 700,
-        height: 700,
+        width: 350,
+        height: 350,
         parentNode: document.querySelector('#videoconference'),
         configOverwrite: { openBridgeChannel: 'datachannel' },
         userInfo: {
@@ -68,10 +69,11 @@
     };
     const api = new JitsiMeetExternalAPI(domain, options);
 
-    api.addEventListener('endpointTextMessageReceived', event=>console.log(event))
+    api.addEventListener('endpointTextMessageReceived', event=>console.log("Msg received: ", event))
 
     function testmessage(){
-        api.executeCommand('sendEndpointTextMessage', '', 'blob');
+        const input = document.getElementById('#test')
+        api.executeCommand('sendEndpointTextMessage', '', input.value);
     }
 </script>
 
