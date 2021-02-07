@@ -36,31 +36,31 @@
 </div>
 
 
-<script>
-    // Initialize mock webcam view#}
-    var video = document.querySelector("#videoElement");
-
-    if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({video: true})
-            .then(function (stream) {
-                video.srcObject = stream;
-            })
-            .catch(function (err) {
-                console.log(err.name + ": " + err.message);
-
-            });
-    }
-</script>
 <!--<script>-->
-<!--    const domain = 'meet.jit.si';-->
-<!--    const options = {-->
-<!--        roomName: 'JitsiMeetAPIExample',-->
-<!--        width: 700,-->
-<!--        height: 700,-->
-<!--        parentNode: document.querySelector('#videoconference')-->
-<!--    };-->
-<!--    const api = new JitsiMeetExternalAPI(domain, options);-->
+<!--    // Initialize mock webcam view#}-->
+<!--    var video = document.querySelector("#videoElement");-->
+
+<!--    if (navigator.mediaDevices.getUserMedia) {-->
+<!--        navigator.mediaDevices.getUserMedia({video: true})-->
+<!--            .then(function (stream) {-->
+<!--                video.srcObject = stream;-->
+<!--            })-->
+<!--            .catch(function (err) {-->
+<!--                console.log(err.name + ": " + err.message);-->
+
+<!--            });-->
+<!--    }-->
 <!--</script>-->
+<script>
+    const domain = 'meet.jit.si';
+    const options = {
+        roomName: 'JitsiMeetAPIExample',
+        width: 700,
+        height: 700,
+        parentNode: document.querySelector('#videoconference')
+    };
+    const api = new JitsiMeetExternalAPI(domain, options);
+</script>
 
 
 <script>
