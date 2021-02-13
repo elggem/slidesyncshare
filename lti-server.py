@@ -1,9 +1,11 @@
 import os
 from flask import Flask
 from flask import render_template
+from flask import request
 from flask.ext.wtf import Form
 from wtforms import IntegerField, BooleanField
 from random import randint
+from hashlib import sha3_256
 
 from pylti.flask import lti
 dir = os.path.dirname(os.path.abspath(__file__))
@@ -42,8 +44,11 @@ def index(lti=lti):
     :param lti: the `lti` object from `pylti`
     :return: index page for lti provider
     """
+    req = request
     print("LTI_help: ", lti)
-    return render_template('index.html', lti=lti)
+
+     sha3_256().update(req.form['resource_link_title']).hexdigest()
+    return render_template('index.html', lti=lti, title=req.form['resource_link_title'] )
 
 
 def set_debugging():
@@ -71,6 +76,6 @@ directly
 """
 port = int(os.environ.get("FLASK_LTI_PORT", 5000))
 host = os.environ.get("FLASK_LTI_HOST", "0.0.0.0")
-context = (dir+'/server.crt', dir + '/server.key')
+context = (dir+'certs/server.crt', dir + 'certs/server.key')
 print(dir+'/server.crt')
 app.run(debug=True, host=host, port=port, ssl_context=context)
