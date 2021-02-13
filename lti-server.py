@@ -76,6 +76,6 @@ directly
 """
 port = int(os.environ.get("FLASK_LTI_PORT", 5000))
 host = os.environ.get("FLASK_LTI_HOST", "0.0.0.0")
-context = (dir+'certs/server.crt', dir + 'certs/server.key')
+context = (dir+'/certs/server.crt', dir + '/certs/server.key')
 print(dir+'/server.crt')
 app.run(debug=True, host=host, port=port, ssl_context=context)
