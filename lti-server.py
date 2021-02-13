@@ -47,7 +47,7 @@ def index(lti=lti):
     req = request
     print("LTI_help: ", lti)
 
-     sha3_256().update(req.form['resource_link_title']).hexdigest()
+    pw = sha3_256().update(req.form['resource_link_title']).hexdigest()
     return render_template('index.html', lti=lti, title=req.form['resource_link_title'] )
 
 
