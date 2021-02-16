@@ -14,15 +14,22 @@
 
 <body>
 <div id="navbar">
-		<span id="logo">SlideSyncShare<br><span id="name">Hello, {{ lti.nickname }}!</span>
-<input type="text" id="test">
-        <button class="button" type="button" onclick="testmessage()">Test</button>
-</span>
-    <div id="buttonbar">
+		<span id="logo">SlideSyncShare<br><span id="name">Hello, {{ lti.nickname }}!</span></span>
+
+    {% if 'Instructor' in lti.role %}
+      <div id="buttonbar">
+        <form id="slidesform">
+          <input id="slidesfile" name="file" type="file" />
+        </form>
+        <span class="button" onclick="loadSlidedeckFromFile()">Upload Slides</span>
         <span class="button" onclick="previousSlide()">Previous Slide</span>
         <span class="button" onclick="nextSlide()">Next Slide</span>
-        <span class="button" onclick="exit()">Exit</span>
-    </div>
+      </div>
+    {% endif %}
+
+    <!-- <input type="text" id="test">
+            <button class="button" type="button" onclick="testmessage()">Test</button>
+    </span> -->
 </div>
 
 <div id="container">
@@ -80,14 +87,28 @@
 
 
 <script>
-    var slidesFilename = "./slidedecks/presentation2.yml";
     var slidesFile = null;
     var currentSlide = 0;
 
-    $.get(slidesFilename, function (data) {
-        slidesFile = jsyaml.load(data);
-        renderCurrentSlide();
-    });
+    function loadSlidedeckFromFile() {
+      var file = document.forms['slidesform'].elements['slidesfile'].files[0];
+
+      var reader = new FileReader();
+
+      reader.onload = function(evt) {
+          if(evt.target.readyState != 2) return;
+          if(evt.target.error) {
+              alert('Error while reading file');
+              return;
+          }
+
+          slidesFile = jsyaml.load(evt.target.result);
+          currentSlide = 0;
+          renderCurrentSlide();
+      };
+
+      reader.readAsText(file);
+    }
 
 
     function renderCurrentSlide() {
