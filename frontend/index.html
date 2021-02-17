@@ -9,7 +9,6 @@
     <script src="./node_modules/js-yaml/dist/js-yaml.min.js"></script>
     <script src="./node_modules/marked/marked.min.js"></script>
     <script src='https://moodle.elggem.pub:8443/external_api.js'></script>
-
 </head>
 
 <body>
@@ -19,17 +18,17 @@
     {% if 'Instructor' in lti.role %}
       <div id="buttonbar">
         <form id="slidesform">
-          <input id="slidesfile" name="file" type="file" />
+          <input id="slidesfile" name="file" type="file" style="position: fixed; top: -100em"/>
         </form>
-        <span class="button" onclick="loadSlidedeckFromFile()">Upload Slides</span>
+        <span class="button" onclick="triggerSlideUpload()">Upload Slides</span>
         <span class="button" onclick="previousSlide()">Previous Slide</span>
         <span class="button" onclick="nextSlide()">Next Slide</span>
       </div>
     {% endif %}
 
+    <!-- Message Test field -->
     <!-- <input type="text" id="test">
-            <button class="button" type="button" onclick="testmessage()">Test</button>
-    </span> -->
+    <button class="button" type="button" onclick="testmessage()">Test</button> -->
 </div>
 
 <div id="container">
@@ -40,27 +39,12 @@
     </div>
 
     <div id="videoconference">
-<!--        <video autoplay="true" id="videoElement"></video>-->
+          <!-- This gets it's content from javascript. -->
     </div>
 </div>
 
-
-<!--<script>-->
-<!--    // Initialize mock webcam view#}-->
-<!--    var video = document.querySelector("#videoElement");-->
-
-<!--    if (navigator.mediaDevices.getUserMedia) {-->
-<!--        navigator.mediaDevices.getUserMedia({video: true})-->
-<!--            .then(function (stream) {-->
-<!--                video.srcObject = stream;-->
-<!--            })-->
-<!--            .catch(function (err) {-->
-<!--                console.log(err.name + ": " + err.message);-->
-
-<!--            });-->
-<!--    }-->
-<!--</script>-->
 <script>
+    // Jitsi related logic.
     const domain = 'moodle.elggem.pub:8443';
 
     {#const domain = 'meet.jit.si'#}
@@ -77,22 +61,33 @@
     };
     const api = new JitsiMeetExternalAPI(domain, options);
 
-    api.addEventListener('endpointTextMessageReceived', event=>console.log("Msg received: ", event))
-
-    function testmessage(){
-        const input = document.getElementById('test')
-        api.executeCommand('sendEndpointTextMessage', '', input.value);
-    }
+    // Test message functionality
+    //api.addEventListener('endpointTextMessageReceived', event=>console.log("Msg received: ", event))
+    // function testmessage(){
+    //     const input = document.getElementById('test')
+    //     api.executeCommand('sendEndpointTextMessage', '', input.value);
+    // }
 </script>
 
 
 <script>
+    // Slide rendering and synchronization logic.
     var slidesFile = null;
     var currentSlide = 0;
 
-    function loadSlidedeckFromFile() {
-      var file = document.forms['slidesform'].elements['slidesfile'].files[0];
+    // event listener
+    document.getElementById('slidesfile').addEventListener('change', loadSlidedeckFromFile, false);
+    // jitsi message channel listener
+    api.addEventListener('endpointTextMessageReceived', event=>receiveSlide(event))
 
+    function triggerSlideUpload() {
+      var fileFormElem = document.getElementById('slidesfile');
+      console.log(fileFormElem);
+      fileFormElem.click();
+    }
+
+    function loadSlidedeckFromFile(file_evt) {
+      var file = file_evt.target.files[0];
       var reader = new FileReader();
 
       reader.onload = function(evt) {
@@ -104,66 +99,73 @@
 
           slidesFile = jsyaml.load(evt.target.result);
           currentSlide = 0;
-          renderCurrentSlide();
+          sendCurrentSlide();
       };
-
       reader.readAsText(file);
-    }
-
-
-    function renderCurrentSlide() {
-        if (slidesFile != null) {
-            if (currentSlide >= slidesFile.slides.length)
-                currentSlide = slidesFile.slides.length - 1;
-
-            var s = slidesFile.slides[currentSlide];
-
-            switch (slidesFile.slides[currentSlide].type) {
-                case "markdown":
-                    document.getElementById('slide').innerHTML = marked(s.content);
-                    break;
-
-                case "poll":
-                    var h = marked("# " + s.title);
-                    for (var i = 0; i < s.answers.length; i++) {
-                        h += "<div class=\'pollanswer\'><input type=\'checkbox\'> " + s.answers[i] + "</div>";
-                    }
-                    h += "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
-                    document.getElementById('slide').innerHTML = h;
-                    break;
-
-                case "quiz":
-                    var h = marked("# " + s.title);
-                    for (var i = 0; i < s.questions.length; i++) {
-                        h += "<div class=\'pollanswer\'>" + s.questions[i].prompt + "<input type=\'textfield\' style=\'float: right\'> </div>";
-                    }
-
-                    h += "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
-                    document.getElementById('slide').innerHTML = h;
-                    break;
-
-                default:
-                    console.log("unknown slide type");
-                    break;
-            }
-
-        }
     }
 
     function previousSlide() {
         currentSlide -= 1
         if (currentSlide < 0) currentSlide = 0;
-        renderCurrentSlide();
+        sendCurrentSlide();
     }
 
     function nextSlide() {
         currentSlide += 1
-        renderCurrentSlide();
+        if (currentSlide >= slidesFile.slides.length)
+            currentSlide = slidesFile.slides.length - 1;
+        sendCurrentSlide();
     }
 
-    function exit() {
-        document.location = "https://google.de";
+
+    function sendCurrentSlide() {
+        if (slidesFile != null) {
+          // send special prefix
+          var slide = slidesFile.slides[currentSlide];
+          api.executeCommand('sendEndpointTextMessage', '', slide);
+          renderSlide(slide);
+        }
+    };
+
+    function receiveSlide(evt) {
+      // check for prefix
+      var s = evt.data.eventData.text;
+      console.log(s);
+      renderSlide(s);
     }
+
+    function renderSlide(s) {
+        switch (s.type) {
+            case "markdown":
+                document.getElementById('slide').innerHTML = marked(s.content);
+                break;
+
+            case "poll":
+                var h = marked("# " + s.title);
+                for (var i = 0; i < s.answers.length; i++) {
+                    h += "<div class=\'pollanswer\'><input type=\'checkbox\'> " + s.answers[i] + "</div>";
+                }
+                h += "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
+                document.getElementById('slide').innerHTML = h;
+                break;
+
+            case "quiz":
+                var h = marked("# " + s.title);
+                for (var i = 0; i < s.questions.length; i++) {
+                    h += "<div class=\'pollanswer\'>" + s.questions[i].prompt + "<input type=\'textfield\' style=\'float: right\'> </div>";
+                }
+
+                h += "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
+                document.getElementById('slide').innerHTML = h;
+                break;
+
+            default:
+                console.log("unknown slide type");
+                break;
+        }
+    }
+
+    
 </script>
 
 </body>
