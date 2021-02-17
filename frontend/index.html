@@ -64,6 +64,10 @@
     // jitsi message channel listener
     api.addEventListener('endpointTextMessageReceived', event=>receiveMessage(event));
 
+    function isInstructor() {
+      return "{{ lti.role }}".startsWith("Instructor");
+    }
+
     function receiveMessage(msg) {
       // check for prefix
       var type = msg.data.eventData.text.type;
@@ -72,6 +76,19 @@
       switch (type) {
           case "slide":
             renderSlide(payload)
+            break;
+
+          case "poll_submission":
+            if (isInstructor()) {
+              slidesFile.slides[currentSlide].results[payload.answer] += 1;
+              sendCurrentSlide();
+            }
+            break;
+
+          case "quiz_submission":
+            if (isInstructor()) {
+
+            }
             break;
 
           default:
@@ -115,6 +132,14 @@
           }
 
           slidesFile = jsyaml.load(evt.target.result);
+
+          for (i=0;i<slidesFile.slides.length;i++) {
+            switch(slidesFile.slides[i].type) {
+              case "poll":
+                slidesFile.slides[i].results = Array(slidesFile.slides[i].answers.length).fill(0);
+            }
+          }
+
           currentSlide = 0;
           sendCurrentSlide();
       };
@@ -152,9 +177,10 @@
             case "poll":
                 var h = marked("# " + s.title);
                 for (var i = 0; i < s.answers.length; i++) {
-                    h += "<div class=\'pollanswer\'><input type=\'checkbox\'> " + s.answers[i] + "</div>";
+                    h += "<div class=\'pollanswer\' onclick=\'submitPoll(" + i + ")\'>" + s.answers[i] + "</div>";
+                    h += "<div class=\'pollresult\'>Number of people clicked: " + s.results[i] + "</div>";
                 }
-                h += "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
+                //h += "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
                 document.getElementById('slide').innerHTML = h;
                 break;
 
@@ -172,6 +198,10 @@
                 console.log("unknown slide type");
                 break;
         }
+    }
+
+    function submitPoll(ans) {
+      api.executeCommand('sendEndpointTextMessage', '', {type: "poll_submission", payload: {answer: ans}});
     }
 
 
