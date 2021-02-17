@@ -61,6 +61,25 @@
     };
     const api = new JitsiMeetExternalAPI(domain, options);
 
+    // jitsi message channel listener
+    api.addEventListener('endpointTextMessageReceived', event=>receiveMessage(event));
+
+    function receiveMessage(msg) {
+      // check for prefix
+      var type = msg.data.eventData.text.type;
+      var payload =  msg.data.eventData.text.payload;
+
+      switch (type) {
+          case "slide":
+            renderSlide(payload)
+            break;
+
+          default:
+            console.log("unknown message received");
+            break;
+      }
+    }
+
     // Test message functionality
     //api.addEventListener('endpointTextMessageReceived', event=>console.log("Msg received: ", event))
     // function testmessage(){
@@ -77,8 +96,6 @@
 
     // event listener
     document.getElementById('slidesfile').addEventListener('change', loadSlidedeckFromFile, false);
-    // jitsi message channel listener
-    api.addEventListener('endpointTextMessageReceived', event=>receiveSlide(event))
 
     function triggerSlideUpload() {
       var fileFormElem = document.getElementById('slidesfile');
@@ -111,7 +128,7 @@
     }
 
     function nextSlide() {
-        currentSlide += 1
+        currentSlide += 1;
         if (currentSlide >= slidesFile.slides.length)
             currentSlide = slidesFile.slides.length - 1;
         sendCurrentSlide();
@@ -120,18 +137,10 @@
 
     function sendCurrentSlide() {
         if (slidesFile != null) {
-          // send special prefix
           var slide = slidesFile.slides[currentSlide];
-          api.executeCommand('sendEndpointTextMessage', '', slide);
+          api.executeCommand('sendEndpointTextMessage', '', {type: "slide", payload: slide});
           renderSlide(slide);
         }
-    };
-
-    function receiveSlide(evt) {
-      // check for prefix
-      var s = evt.data.eventData.text;
-      console.log(s);
-      renderSlide(s);
     }
 
     function renderSlide(s) {
@@ -165,7 +174,7 @@
         }
     }
 
-    
+
 </script>
 
 </body>
