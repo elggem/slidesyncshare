@@ -87,7 +87,10 @@
 
           case "quiz_submission":
             if (isInstructor()) {
-
+              for (i=0;i<payload.answers.length;i++) {
+                slidesFile.slides[currentSlide].results[i].push({name: payload.name, answer: payload.answers[i]});
+              }
+              sendCurrentSlide();
             }
             break;
 
@@ -136,7 +139,14 @@
           for (i=0;i<slidesFile.slides.length;i++) {
             switch(slidesFile.slides[i].type) {
               case "poll":
-                slidesFile.slides[i].results = Array(slidesFile.slides[i].answers.length).fill(0);
+                slidesFile.slides[i].results = new Array(slidesFile.slides[i].answers.length).fill(0);
+                break;
+
+              case "quiz":
+                slidesFile.slides[i].results = new Array();
+                for (j=0;j<slidesFile.slides[i].questions.length;j++) {
+                  slidesFile.slides[i].results.push(new Array());
+                }
             }
           }
 
@@ -187,10 +197,21 @@
             case "quiz":
                 var h = marked("# " + s.title);
                 for (var i = 0; i < s.questions.length; i++) {
-                    h += "<div class=\'pollanswer\'>" + s.questions[i].prompt + "<input type=\'textfield\' style=\'float: right\'> </div>";
+                    h += "<div class=\'quizanswer\'>" + s.questions[i].prompt + "<input id=\'quizanswer_" + i + "\' type=\'textfield\' style=\'float: right\'> </div>";
+
+                    if (isInstructor()) {
+                      h += "<div class=\'pollresult green\'>Expected Answer: " + s.questions[i].answer + "</div>";
+
+                      for (j=0;j<s.results[i].length;j++) {
+                          console.log(s.results[i][j]);
+                          h += "<div class=\'pollresult\'>Answer from " + s.results[i][j].name + ": " + s.results[i][j].answer + "</div>";
+                      }
+                    }
                 }
 
-                h += "<div class=\'pollbutton\'' onclick=\'nextSlide()\'>Submit</div>";
+                if (!isInstructor()) {
+                    h += "<div id=\'pollsubmitbutton\' class=\'pollbutton\'' onclick=\'submitQuiz()\'>Submit</div>";
+                }
                 document.getElementById('slide').innerHTML = h;
                 break;
 
@@ -204,6 +225,22 @@
       api.executeCommand('sendEndpointTextMessage', '', {type: "poll_submission", payload: {answer: ans}});
     }
 
+    function submitQuiz() {
+      // make an array with quiz answers
+      var i = 0;
+      var ans = [];
+      while(true) {
+        var answElem = document.getElementById('quizanswer_'+i);
+        if (answElem) {
+          ans.push(answElem.value);
+        } else {
+          break;
+        }
+        i++;
+      }
+
+      api.executeCommand('sendEndpointTextMessage', '', {type: "quiz_submission", payload: {name: "{{ lti.name }}", answers: ans}});
+    }
 
 </script>
 
