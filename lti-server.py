@@ -52,10 +52,13 @@ def index(lti=lti):
         'resource_link_id')).encode('utf-8')).hexdigest()
     context = {}
     context.update({'room_name': lti_para.get('resource_link_title', 'Conference'),
-                    'user_name': lti_para.get('lis_person_name_full', 'User'),
+                    'full_name': lti_para.get('lis_person_name_full', 'User'),
+                    'name': lti.name,
+                    'nickname': lti.nickname,
                     'email': lti_para.get('lis_person_contact_email_primary'),
-                    'pw': pw})
-    print(pw)
+                    'pw': pw,
+                    'role': lti.role
+                    })
     return render_template('index.html', lti=context)
 
 

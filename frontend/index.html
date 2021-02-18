@@ -13,7 +13,7 @@
 
 <body>
 <div id="navbar">
-		<span id="logo">SlideSyncShare<br><span id="name">Hello, {{ lti.nickname }}!</span></span>
+		<span id="logo">SlideSyncShare<br><span id="name">Hello, {{ lti.full_name }}!</span></span>
 
     {% if 'Instructor' in lti.role %}
       <div id="buttonbar">
@@ -66,7 +66,7 @@
         },
         userInfo: {
             email: "{{ lti.email }}",
-            displayName: "{{ lti.user_name }}"
+            displayName: "{{ lti.full_name }}"
         }
     };
     const api = new JitsiMeetExternalAPI(domain, options);
@@ -267,7 +267,7 @@
         i++;
       }
 
-      api.executeCommand('sendEndpointTextMessage', '', {type: "quiz_submission", payload: {name: "{{ lti.name }}", answers: ans}});
+      api.executeCommand('sendEndpointTextMessage', '', {type: "quiz_submission", payload: {name: "{{ lti.full_name }}", answers: ans}});
     }
 
 </script>
