@@ -8,10 +8,12 @@ from random import randint
 from hashlib import sha3_256
 
 from pylti.flask import lti
+
 dir = os.path.dirname(os.path.abspath(__file__))
 VERSION = '0.0.1'
 app = Flask(__name__, static_url_path='', static_folder="frontend", template_folder="frontend")
 app.config.from_object('config')
+
 
 def error(exception=None):
     """ render error page
@@ -44,12 +46,17 @@ def index(lti=lti):
     :param lti: the `lti` object from `pylti`
     :return: index page for lti provider
     """
-    req = request
     print("LTI_help: ", lti)
-
-    pw = sha3_256(req.form['resource_link_title'].encode('utf-8')).hexdigest()
+    lti_para = request.form
+    pw = sha3_256((lti_para.get('tool_consumer_instance_guid') + lti_para.get('context_id') + lti_para.get(
+        'resource_link_id')).encode('utf-8')).hexdigest()
+    context = {}
+    context.update({'room_name': lti_para.get('resource_link_title', 'Conference'),
+                    'user_name': lti_para.get('lis_person_name_full', 'User'),
+                    'email': lti_para.get('lis_person_contact_email_primary'),
+                    'pw': pw})
     print(pw)
-    return render_template('index.html', lti=lti, title=req.form['resource_link_title'] )
+    return render_template('index.html', lti=context)
 
 
 def set_debugging():
@@ -68,15 +75,16 @@ def set_debugging():
     ch.setFormatter(formatter)
     root.addHandler(ch)
 
+
 set_debugging()
 
-#if __name__ == '__main__':
+# if __name__ == '__main__':
 """
 For if you want to run the flask development server
 directly
 """
 port = int(os.environ.get("FLASK_LTI_PORT", 5000))
 host = os.environ.get("FLASK_LTI_HOST", "0.0.0.0")
-context = (dir+'/certs/server.crt', dir + '/certs/server.key')
-print(dir+'/server.crt')
+context = (dir + '/certs/server.crt', dir + '/certs/server.key')
+print(dir + '/server.crt')
 app.run(debug=True, host=host, port=port, ssl_context=context)

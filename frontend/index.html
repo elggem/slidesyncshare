@@ -49,17 +49,45 @@
 
     {#const domain = 'meet.jit.si'#}
     const options = {
-        roomName: "{{ title }}",
+        roomName: "{{ lti.room_name }}",
         width: "100%",
         {#height: 350,#}
         parentNode: document.querySelector('#videoconference'),
-        configOverwrite: { openBridgeChannel: 'datachannel' },
+        configOverwrite: {openBridgeChannel: 'datachannel'},
+        interfaceConfigOverwrite: {
+            TOOLBAR_BUTTONS: [
+                'microphone', 'camera', 'closedcaptions', 'desktop',  'fullscreen',
+                'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
+                'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
+                'videoquality', 'filmstrip', 'feedback', 'stats', 'shortcuts',
+                'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
+                {#'security''invite','embedmeeting',#}
+            ]
+        },
         userInfo: {
-            email: "{{ lti.nickname }}",
-            displayName: "{{ lti.nickname }}"
+            email: "{{ lti.email }}",
+            displayName: "{{ lti.user_name }}"
         }
     };
     const api = new JitsiMeetExternalAPI(domain, options);
+
+    {# Login #}
+    api.addEventListener('passwordRequired', () => {
+        api.executeCommand('password', '{{ lti.pw }}');
+    });
+    api.addEventListener('videoConferenceJoined', (response) => {
+        api.addEventListener('participantRoleChanged', function (event) {
+            if (event.role === "moderator") {
+                api.executeCommand('password', '{{ lti.pw }}');
+            }
+        });
+        {#api.executeCommand('password', '{{ lti.pw }}');#}
+    });
+    api.addEventListener('videoConferenceLeft', (event) => {
+        console.log('yay', event)
+        {#api.dispose();#}
+    });
+
 
     // jitsi message channel listener
     api.addEventListener('endpointTextMessageReceived', event=>receiveMessage(event));
